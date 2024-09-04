@@ -19,25 +19,44 @@ public class GamePanel extends JPanel implements ActionListener {
     Boolean running;
     Timer timer;
     Random random;
-    public void startGame(){
 
+  GamePanel(){
+      random=new Random();
+      this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
+      this.setBackground(Color.BLACK);
+      this.setFocusable(true);
+      this.addKeyListener(new MyKeyAdapter());
+      startGame();
+  }
+
+    public void startGame(){
+       newApple();//creates the apple to be eaten
+        running = true; //make the snake move since it has been static
+        timer =new Timer(DELAY,this); //determines the speed of the game
+        timer.start();
     }
     public void paintComponent(Graphics g){
+      super.paintComponent(g);
+      draw(g);
 
     }
-public  void draw(){
+   public  void draw(Graphics g){
+     for(int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++){
+     g.drawLine(i*UNIT_SIZE,0,i*UNIT_SIZE,SCREEN_HEIGHT);
+      g.drawLine(0,i*UNIT_SIZE,SCREEN_WIDTH,i*UNIT_SIZE);}}
+    public void newApple(){
 
-}
-public void move(){
+    }
+    public void move(){
 
-}
-public void checkApple(){
+   }
+   public void checkApple(){
 
-}
-public void checkCollision(){
+    }
+    public void checkCollision(){
 
-}
-public void gameOver(Graphics g){
+    }
+   public void gameOver(Graphics g){
 
 }
     @Override
