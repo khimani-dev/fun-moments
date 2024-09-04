@@ -11,7 +11,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int DELAY =70; //speed of the snake movement
     final int x[] =new int[GAME_UNITS];//holds game-units on x-axis
     final int y[] =new int[GAME_UNITS];//holds game-units on y-axis
-    int bodyParts=5; //initially the snake starts with 5 pieces
+    int bodyParts=6; //initially the snake starts with 6 pieces
     int applesEaten;
     int appleX; //apple appears on the x-axis
     int appleY;//apple appears on y-axis
@@ -43,13 +43,36 @@ public class GamePanel extends JPanel implements ActionListener {
    public  void draw(Graphics g){
      for(int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++){
      g.drawLine(i*UNIT_SIZE,0,i*UNIT_SIZE,SCREEN_HEIGHT);
-      g.drawLine(0,i*UNIT_SIZE,SCREEN_WIDTH,i*UNIT_SIZE);}}
-    public void newApple(){
+      g.drawLine(0,i*UNIT_SIZE,SCREEN_WIDTH,i*UNIT_SIZE);
+     }
+     g.setColor(Color.red);  //color of the apple
+     g.fillOval(appleX,appleY,UNIT_SIZE,UNIT_SIZE); //shape and size of the apple
+  }
+    public void newApple() {
+        appleX = random.nextInt((int) (SCREEN_WIDTH / UNIT_SIZE) * UNIT_SIZE);//places the apple along x-axis
+        appleY = random.nextInt((int) (SCREEN_HEIGHT / UNIT_SIZE) * UNIT_SIZE); //places the apple along y-axis
 
     }
-    public void move(){
-
-   }
+    public void move() {
+        for (int i = bodyParts; i > 0; i--) { //the loop is for changing the direction along y and x-axis
+            x[i] = x[i - 1];
+            y[i] = y[i - 1];
+        }
+         switch (direction){  // snake direction change
+             case 'U':
+                 y[0]=y[0] -UNIT_SIZE;
+                 break;
+             case 'D':
+                 y[0]=y[0] + UNIT_SIZE;
+                 break;
+             case 'L':
+                 x[0]=x[0] -UNIT_SIZE;
+                 break;
+             case 'R':
+                 x[0]=x[0] + UNIT_SIZE;
+                 break;
+    }
+  }
    public void checkApple(){
 
     }

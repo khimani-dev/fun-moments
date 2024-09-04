@@ -11,3 +11,5 @@ public class GameFrame extends JFrame {
      this.setLocationRelativeTo(null);//makes the contents appear on the centre of the screen
  }
 }
+
+
