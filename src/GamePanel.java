@@ -8,7 +8,7 @@ public class GamePanel extends JPanel implements ActionListener {
   static final int SCREEN_HEIGHT=600;
     static final int UNIT_SIZE=25;//Size of objects in the game screen
     static final int GAME_UNITS=(SCREEN_WIDTH *SCREEN_HEIGHT)/UNIT_SIZE; //No. of elements that can fit in screen
-    static final int DELAY =70; //speed of the snake movement
+    static final int DELAY =100; //speed of the snake movement
     final int x[] =new int[GAME_UNITS];//holds game-units on x-axis
     final int y[] =new int[GAME_UNITS];//holds game-units on y-axis
     int bodyParts=6; //initially the snake starts with 6 pieces
@@ -40,23 +40,33 @@ public class GamePanel extends JPanel implements ActionListener {
       draw(g);
 
     }
-   public  void draw(Graphics g){
-     for(int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++){
-     g.drawLine(i*UNIT_SIZE,0,i*UNIT_SIZE,SCREEN_HEIGHT);
-      g.drawLine(0,i*UNIT_SIZE,SCREEN_WIDTH,i*UNIT_SIZE);
-     }
-     g.setColor(Color.red);  //color of the apple
-     g.fillOval(appleX,appleY,UNIT_SIZE,UNIT_SIZE); //shape and size of the apple
+   public  void draw(Graphics g) {
+       if (running) {
+          for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
+               g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+               g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
+           }
+           g.setColor(Color.red);  //color of the apple
+           g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE); //shape and size of the apple
 
-     for (int i=0;i<bodyParts;i++){
-         if (i==0){
-             g.setColor(Color.green);
-             g.fillRect(x[i],y[i],UNIT_SIZE,UNIT_SIZE);
-         }
-         else
-             g.setColor(new Color(45,180,0));
-             g.fillRect(x[i],y[i],UNIT_SIZE,UNIT_SIZE);
-     }
+           for (int i = 0; i < bodyParts; i++) {
+               if (i == 0) {
+                   g.setColor(Color.green);
+                   g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+               } else {
+                   g.setColor(new Color(45, 180, 0));
+                   g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+               }
+           }
+           //displays the score of the game
+           g.setColor(Color.red);
+           g.setFont(new Font("Ink free",Font.BOLD,35));
+           FontMetrics metrics=getFontMetrics(g.getFont()); //aligns the text centre
+           g.drawString("Score :" +applesEaten,(SCREEN_WIDTH - metrics.stringWidth("Score :" +applesEaten))/2, g.getFont().getSize());
+       }
+      else {
+          gameOver(g);
+      }
   }
     public void newApple() {
        appleX = random.nextInt((int) (SCREEN_WIDTH/UNIT_SIZE)) * UNIT_SIZE;//places the apple along x-axis
@@ -84,11 +94,15 @@ public class GamePanel extends JPanel implements ActionListener {
     }
   }
    public void checkApple(){
-
+      if ((x[0]==appleX) && y[0] ==appleY) {
+          bodyParts++;
+          applesEaten++;
+          newApple();
+       }
     }
     public void checkCollision() {
         //checks collision of the snake with the body
-        for (int i = bodyParts; i > 0; i--) {
+        for (int i = bodyParts; i < 0; i--) { //the loop iterates thru the body parts
             if ((x[0] == x[i]) && (y[0] == y[i]));
             {
                 running = false;
@@ -115,7 +129,17 @@ public class GamePanel extends JPanel implements ActionListener {
       }
     }
    public void gameOver(Graphics g){
+      //score over the gameOver display
+       g.setColor(Color.red);
+       g.setFont(new Font("Ink free",Font.BOLD,35));
+       FontMetrics metrics1=getFontMetrics(g.getFont()); //aligns the text centre
+       g.drawString("Score :" +applesEaten,(SCREEN_WIDTH - metrics1.stringWidth("Score :" +applesEaten))/2, g.getFont().getSize());
 
+      //game over text display
+       g.setColor(Color.red);
+       g.setFont(new Font("Ink free",Font.BOLD,70));
+       FontMetrics metrics2=getFontMetrics(g.getFont()); //aligns the text centre
+       g.drawString("Game Over",(SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2); //centres the GameOver text at the middle of the screen
 }
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -129,7 +153,35 @@ public class GamePanel extends JPanel implements ActionListener {
     public  class MyKeyAdapter extends KeyAdapter{
         @Override
         public void keyPressed(KeyEvent e){
+            switch(e.getKeyCode()){
+                case KeyEvent.VK_LEFT:
+                if (direction !='R'){ //ensure 90deg turning only
+                    direction='L';
+                }
+                break;
 
-        }
-    }
-}
+                case KeyEvent.VK_RIGHT:
+                    if (direction !='L'){ //ensure 90deg turning only
+                        direction='R';
+                    }
+                    break;
+
+                case KeyEvent.VK_UP:
+                    if (direction !='D'){ //ensure 90deg turning only
+                        direction='U';
+                    }
+                    break;
+
+                case KeyEvent.VK_DOWN:
+                    if (direction !='U'){ //ensure 90deg turning only
+                        direction='D';
+                    }
+                    break;
+                   }
+              }
+         }
+      }
+
+
+
+
